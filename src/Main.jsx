@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { StyleSheet, View, TextInput, Button, Image, Text } from "react-native";
+import { StyleSheet, View, TextInput, Button, Image, Text, Keyboard } from "react-native";
 
 export default function Main() {
   const [movieName, setMovieName] = useState("");
   const [movie, setMovie] = useState(null);
 
   const handleSearch = () => {
+    Keyboard.dismiss();
     axios.get("https://www.omdbapi.com/?apikey=93064b0b&t=" + movieName).then((result) => {
       setMovie(result.data);
     });
@@ -18,9 +19,8 @@ export default function Main() {
         <TextInput value={movieName} onChangeText={setMovieName} style={styles.input} />
         <Button onPress={handleSearch} title='Buscar' style={styles.button} />
       </View>
-      {/* <Image style={styles.image} source={require("../assets/titanic.jpg")} /> */}
       {movie && <Image style={styles.image} source={{ uri: movie.Poster }} />}
-      {!movie && <Text>Busque una película</Text>}
+      {!movie && <Text style={styles.buscarname}>Busque una película</Text>}
     </View>
   );
 }
@@ -39,7 +39,10 @@ const styles = StyleSheet.create({
     marginRight: 5,
     paddingHorizontal: 10,
   },
-  button: {},
+  buscarname: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
   search: {
     flexDirection: "row",
     justifyContent: "center",
